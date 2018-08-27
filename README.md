@@ -6,12 +6,17 @@ api for creating n valid random ssns. Note: deployed on a free tier heroku node 
 
 # usage
 ```bash
-GET https://ssn-machine.herokuapp.com?n=[ssns to create]
+# usage
+GET https://ssn-machine.herokuapp.com
+# return n valid ssns
+GET /gen?n=<number>
+# returns true if ssn is valid
+GET /valid?ssn=<ssn>
 ```
 
 # todos
-- [ ] add option for fullyear `obj.toString({fullYear:true})`
-- [ ] only return unique ssns
+- [x] add fullyear to ssns
+- [ ] only return unique ssns compared to POST payload
 
 # license
 Whatever the original repo had
