@@ -36,10 +36,10 @@ const handlers = {
 				return cb(null, new Error('Error: queryparam <n> missing'));
 			}
 
-			if (isInt(n) && +n < 1000) {
+			if (isInt(n)) {
 				cb(ssns(+n));
 			} else {
-				cb(null, new Error('Error: queryparam <n> is not a number or above the limit of 1000'));
+				cb(null, new Error('Error: queryparam <n> is not a number'));
 			}
 		}
 	},

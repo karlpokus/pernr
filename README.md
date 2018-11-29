@@ -1,10 +1,12 @@
 # wat?
-This fork contains (1) a feature branch for creating a valid random ssn ([pending PR](https://github.com/arokor/pernr/pull/4)) and (2) a branch for a heroku deploy of an ssn-machine.
+This fork contains the following branches:
+- `feature/add-random-pernr` with [pending PR](https://github.com/arokor/pernr/pull/4)
+- `fix/heroku-deploy` for heroku deploy of an ssn-machine
+- `fix/no-limit` fork of the heroku branch without a limit on ssn generation. Intended for local use.
 
 # ssn-machine
-api for creating n valid random ssns. Note: deployed on a free tier heroku node so partial downtime is to be expected.
+Public api for validating-, or creating valid ssns (<1000). Deployed on a free tier heroku node so partial downtime is to be expected.
 
-# usage
 ```bash
 # usage
 GET https://ssn-machine.herokuapp.com
@@ -12,6 +14,14 @@ GET https://ssn-machine.herokuapp.com
 GET /gen?n=<number>
 # returns true if ssn is valid
 GET /valid?ssn=<ssn>
+```
+
+# no-limit
+Run this on you local machine. Same api as the ssn-machine. A quick load test of 100k ssns generated resulted in 85 MB mem usage.
+
+```bash
+$ node index.js
+$ curl -s "localhost:5555/$API > file
 ```
 
 # todos
