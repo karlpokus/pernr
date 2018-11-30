@@ -1,8 +1,4 @@
-const http = require('http');
-const url = require('url');
 const Pernr = require('./lib/pernr');
-const srv = http.createServer();
-const PORT = process.env.PORT || 5555;
 const isInt = (n) => !isNaN(parseFloat(n)) && isFinite(n) && !/\./.test(n);
 
 function ssns(n) {
@@ -18,62 +14,29 @@ function ssns(n) {
 }
 
 const handlers = {
-	GET: {
-		valid: function({ ssn }, req, cb) {
-			if (!ssn) {
-				return cb(null, new Error('Error: queryparam <ssn> missing'));
-			}
-
-			try {
-				const pnr = new Pernr(ssn);
-				cb(pnr.isValid().toString());
-			} catch(err) {
-				cb('false');
-			}
-		},
-		gen: function({ n }, req, cb) {
-			if (!n) {
-				return cb(null, new Error('Error: queryparam <n> missing'));
-			}
-
-			if (isInt(n)) {
-				cb(ssns(+n));
-			} else {
-				cb(null, new Error('Error: queryparam <n> is not a number'));
-			}
+	valid: function(ssn, cb) {
+		try {
+			const pnr = new Pernr(ssn);
+			cb(pnr.isValid().toString());
+		} catch(err) {
+			cb('false');
 		}
 	},
-	POST: { // wip
-		uniq: function({ n }, req, cb) {
-			if (!n) {
-				cb(null, new Error('Error: queryparam <n> missing'));
-			}
-
-			let data = "";
-			req
-				.on('data', chunk => data += chunk)
-				.on('end', () => cb(data || "no data"))
+	gen: function(n, cb) {
+		if (isInt(n)) {
+			cb(ssns(+n));
+		} else {
+			cb(null, new Error('Error: opt is not a number'));
 		}
 	}
 };
 
-function parseUrlParts(req) {
-	const parts = url.parse(req.url, true); // 2nd arg parses queryParams into {}
-	const path = parts.pathname.substr(1); // remove /
-	return {
-		method: req.method,
-		path: path ? path : "non-existent-key", // avoid looking up empty string as key on handlers
-		query: parts.query
-	}
-}
-
-function reply(res, data, err) {
+function reply(data, err) {
 	if (err) {
-		data = usage(err.message); // err + usage
+		console.error(usage(err.message));
+		process.exit(1);
 	}
-
-	res.writeHead(200);
-	res.end(data);
+	console.log(data);
 }
 
 function usage(err) {
@@ -101,4 +64,16 @@ function router(req, res) {
 	}
 }
 
-srv.on('request', router).listen(PORT, () => console.log('api started on port', PORT));
+function main(cmd, opt) {
+	if (cmd != 'valid' && cmd != 'gen') {
+		reply(null, new Error('Error: invalid cmd'));
+	}
+	if (!opt) {
+		reply(null, new Error('Error: opt missing'));
+	}
+	handlers[cmd](opt, reply);
+}
+
+const [ cmd, opt ] = process.argv.slice(2);
+main(cmd, opt);
+//console.log(cmd, opt);

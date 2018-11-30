@@ -5,7 +5,7 @@ This fork contains the following branches:
 - `fix/no-limit` fork of the heroku branch without a limit on ssn generation. Intended for local use.
 
 # ssn-machine
-Public api for validating-, or creating valid ssns (<1000). Deployed on a free tier heroku node so partial downtime is to be expected.
+Public http api for validating-, or creating valid ssns (<1000). Deployed on a free tier heroku node so partial downtime is to be expected.
 
 ```bash
 # usage
@@ -17,15 +17,15 @@ GET /valid?ssn=<ssn>
 ```
 
 # no-limit
-Run this on you local machine. Same api as the ssn-machine. A quick load test of 100k ssns generated resulted in 85 MB mem usage.
+Run this on you local machine. I benchmarked 1M ssns generated to 5.018 secs.
 
 ```bash
-$ node index.js
-$ curl -s "localhost:5555/$API > file
+$ node index.js gen|valid num|ssn > file
 ```
 
 # todos
 - [x] add fullyear to ssns
+- [x] remove http from local scope
 - [ ] only return unique ssns compared to POST payload
 
 # license
