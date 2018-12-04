@@ -17,10 +17,20 @@ GET /valid?ssn=<ssn>
 ```
 
 # no-limit
-Run this on you local machine. I benchmarked 1M ssns generated to 5.018 secs.
+Run this on you local machine.
 
 ```bash
 $ node index.js gen|valid num|ssn > file
+```
+
+Benchmark 1M ssns
+
+```bash
+$ /usr/bin/time -lp node index.js gen 1000000 > file
+real         4.98
+user         5.30
+sys          0.18
+ 284987392  maximum resident set size # ~285 MB
 ```
 
 # todos
